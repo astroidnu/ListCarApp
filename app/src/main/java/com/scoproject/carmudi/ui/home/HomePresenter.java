@@ -3,6 +3,7 @@ package com.scoproject.carmudi.ui.home;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
 
 import com.google.gson.Gson;
 import com.scoproject.carmudi.base.ViewPresenter;
@@ -43,10 +44,11 @@ public class HomePresenter extends ViewPresenter<HomeView> {
         mCompositeDisposable = new CompositeDisposable();
         loadData(defaultPage,detaultMaxItem, true);
         loadMore();
+        onSort();
         getView().mSwipeRefreshLayout.setOnRefreshListener(() -> loadData(1,mResultDataList.size(), true));
 
     }
-
+    /*Load Data From API*/
     public void loadData(int page, int maxSize, boolean isSwipeRefresh){
         if(isSwipeRefresh){
             getView().mSwipeRefreshLayout.setRefreshing(true);
@@ -89,7 +91,16 @@ public class HomePresenter extends ViewPresenter<HomeView> {
         });
     }
 
-    private void onError(Throwable throwable) {
+    private void onSort(){
+        getView().mToolbarSort.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(getClass().getName(), "onClickSort()");
+            }
+        });
+    }
+
+    public void onError(Throwable throwable) {
         getView().mSwipeRefreshLayout.setRefreshing(false);
         getView().mProgressBar.hide();
         Log.d(getClass().getName(), throwable.getMessage());

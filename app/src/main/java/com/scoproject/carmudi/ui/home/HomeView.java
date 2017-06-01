@@ -6,7 +6,10 @@ import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.scoproject.carmudi.R;
 import com.scoproject.carmudi.data.ResultData;
@@ -27,6 +30,10 @@ public class HomeView extends CoordinatorLayout {
     RecyclerView mHomeRV;
     @ViewById(R.id.home_progressbar)
     ContentLoadingProgressBar mProgressBar;
+    @ViewById(R.id.toolbar_title)
+    TextView mToolbarTitle;
+    @ViewById(R.id.toolbar_sort)
+    ImageButton mToolbarSort;
     @ViewById(R.id.home_swiperefresh)
     SwipeRefreshLayout mSwipeRefreshLayout;
 
@@ -34,6 +41,7 @@ public class HomeView extends CoordinatorLayout {
 
     @AfterViews
     void init(){
+        mToolbarTitle.setText("Home");
         mHomeActivityAdapter = new HomeActivityAdapter(getContext());
         mHomeRV.setLayoutManager(new LinearLayoutManager(getContext()));
         mHomeRV.setAdapter(mHomeActivityAdapter);
