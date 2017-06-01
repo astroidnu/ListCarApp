@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="170dp">
+    <ImageView
+        android:id="@+id/item_car_thumb"
+        android:scaleType="centerCrop"
+        android:src="@drawable/demo_car"
+        android:layout_width="120dp"
+        android:layout_height="170dp" />
+    <LinearLayout
+        android:layout_margin="4dp"
+        android:orientation="vertical"
+        android:layout_toRightOf="@id/item_car_thumb"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <TextView
+            android:id="@+id/item_car_name"
+            android:layout_margin="8dp"
+            android:textColor="#000"
+            android:textStyle="bold"
+            android:textSize="18dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Name"/>
+        <TextView
+            android:id="@+id/item_car_price"
+            android:textStyle="bold"
+            android:layout_margin="8dp"
+            android:textColor="#000"
+            android:textSize="24dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Price"/>
+        <TextView
+            android:id="@+id/item_car_brand"
+            android:layout_margin="8dp"
+            android:textColor="#000"
+            android:textSize="14dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Brand"/>
+    </LinearLayout>
+</RelativeLayout>

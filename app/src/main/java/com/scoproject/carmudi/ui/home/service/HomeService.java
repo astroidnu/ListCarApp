@@ -28,7 +28,7 @@ public class HomeService {
 
 
     public Flowable<HomeResponse> getCarsList() {
-        return networkService.getCars(mPageSize, mMaxItemSize)
+        return networkService.getCars("https://www.carmudi.co.id/api/cars/page:"+mPageSize+"/maxitems:"+mMaxItemSize+"/")
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnError(this::handleAccountError)

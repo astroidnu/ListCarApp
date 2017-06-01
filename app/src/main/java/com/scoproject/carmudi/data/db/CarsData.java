@@ -1,6 +1,13 @@
 package com.scoproject.carmudi.data.db;
 
+import android.media.Image;
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
+import com.scoproject.carmudi.data.AttributesData;
+import com.scoproject.carmudi.data.ImageData;
+import com.scoproject.carmudi.data.SimplesData;
 
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
@@ -9,7 +16,7 @@ import org.greenrobot.greendao.annotation.Generated;
  * Created by ibnumuzzakkir on 6/1/17.
  */
 @Entity
-public class CarsData {
+public class CarsData implements Parcelable {
     @SerializedName("fk_country")
     public String fkCountry;
     @SerializedName("status")
@@ -157,7 +164,7 @@ public class CarsData {
     @SerializedName("original_price_currency")
     public String originalPriceCurrency;
     @SerializedName("is_certified")
-    public Integer isCertified;
+    public int isCertified;
     @SerializedName("name")
     public String name;
     @SerializedName("description")
@@ -196,6 +203,115 @@ public class CarsData {
     public String fuelPosition;
     @SerializedName("fuel_id")
     public String fuelId;
+
+
+    protected CarsData(Parcel in) {
+        fkCountry = in.readString();
+        status = in.readString();
+        attributeSetName = in.readString();
+        attributeSetNameLocal = in.readString();
+        approved = in.readString();
+        statusSupplierConfig = in.readString();
+        activatedAt = in.readString();
+        listingStart = in.readString();
+        listingEnd = in.readString();
+        fkVertical = in.readString();
+        fkCatalogBrand = in.readString();
+        fkCatalogBrandModel = in.readString();
+        brandModelEdition = in.readString();
+        listingType = in.readString();
+        listingCountry = in.readString();
+        listingArea = in.readString();
+        condition = in.readString();
+        conditionPosition = in.readString();
+        conditionId = in.readString();
+        colorFamilyPosition = in.readString();
+        colorFamilyId = in.readString();
+        doorsPosition = in.readString();
+        doorsId = in.readString();
+        power = in.readString();
+        driveTypePosition = in.readString();
+        driveTypeId = in.readString();
+        interior = in.readString();
+        exterior = in.readString();
+        equipment = in.readString();
+        warrantyTypePosition = in.readString();
+        warrantyTypeId = in.readString();
+        warrantyYearsPosition = in.readString();
+        warrantyYearsId = in.readString();
+        priceConditionsPosition = in.readString();
+        priceConditionsId = in.readString();
+        premiumListing = in.readString();
+        alternateSku = in.readString();
+        originalName = in.readString();
+        rootCategory = in.readString();
+        agencyLogo = in.readString();
+        url = in.readString();
+        id = in.readString();
+        locationLatitude = in.readString();
+        locationLongitude = in.readString();
+        googleFormattedAddress = in.readString();
+        googlePlaceId = in.readString();
+        fkCustomerAddress = in.readString();
+        listingRegion = in.readString();
+        listingCity = in.readString();
+        agencyAddress = in.readString();
+        agencyCity = in.readString();
+        fkCountryRegion = in.readString();
+        fkCountryRegionCity = in.readString();
+        fkCountryRegionCityArea = in.readString();
+        showListingAddress = in.readString();
+        itemContactName = in.readString();
+        itemContactEmail = in.readString();
+        itemContactMobile = in.readString();
+        itemContactHomephone = in.readString();
+        agencyName = in.readString();
+        productOwnerUrlKey = in.readString();
+        productOwner = in.readString();
+        fkCustomer = in.readString();
+        isAgent = in.readString();
+        sellerIsTrusted = in.readString();
+        showOfficephone = in.readString();
+        showHomephone = in.readString();
+        showMobile = in.readString();
+        sku = in.readString();
+        idCatalogConfig = in.readString();
+        attributeSetId = in.readString();
+        originalPriceCurrency = in.readString();
+        isCertified = in.readInt();
+        name = in.readString();
+        description = in.readString();
+        urlkeyDetails = in.readString();
+        priceNotAvailable = in.readString();
+        price = in.readString();
+        originalPrice = in.readString();
+        brand = in.readString();
+        brandModel = in.readString();
+        topPosition = in.readString();
+        mileageNotAvailable = in.readString();
+        mileage = in.readString();
+        configId = in.readString();
+        rejectedComment = in.readString();
+        transmission = in.readString();
+        transmissionPosition = in.readString();
+        transmissionId = in.readString();
+        fuel = in.readString();
+        fuelPosition = in.readString();
+        fuelId = in.readString();
+    }
+
+    public static final Creator<CarsData> CREATOR = new Creator<CarsData>() {
+        @Override
+        public CarsData createFromParcel(Parcel in) {
+            return new CarsData(in);
+        }
+
+        @Override
+        public CarsData[] newArray(int size) {
+            return new CarsData[size];
+        }
+    };
+
     public String getFuelId() {
         return this.fuelId;
     }
@@ -310,10 +426,10 @@ public class CarsData {
     public void setName(String name) {
         this.name = name;
     }
-    public Integer getIsCertified() {
+    public int getIsCertified() {
         return this.isCertified;
     }
-    public void setIsCertified(Integer isCertified) {
+    public void setIsCertified(int isCertified) {
         this.isCertified = isCertified;
     }
     public String getOriginalPriceCurrency() {
@@ -754,7 +870,7 @@ public class CarsData {
     public void setFkCountry(String fkCountry) {
         this.fkCountry = fkCountry;
     }
-    @Generated(hash = 830863811)
+    @Generated(hash = 1824677459)
     public CarsData(String fkCountry, String status, String attributeSetName,
             String attributeSetNameLocal, String approved,
             String statusSupplierConfig, String activatedAt, String listingStart,
@@ -782,7 +898,7 @@ public class CarsData {
             String isAgent, String sellerIsTrusted, String showOfficephone,
             String showHomephone, String showMobile, String sku,
             String idCatalogConfig, String attributeSetId,
-            String originalPriceCurrency, Integer isCertified, String name,
+            String originalPriceCurrency, int isCertified, String name,
             String description, String urlkeyDetails, String priceNotAvailable,
             String price, String originalPrice, String brand, String brandModel,
             String topPosition, String mileageNotAvailable, String mileage,
@@ -885,5 +1001,106 @@ public class CarsData {
     }
     @Generated(hash = 316270755)
     public CarsData() {
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(fkCountry);
+        dest.writeString(status);
+        dest.writeString(attributeSetName);
+        dest.writeString(attributeSetNameLocal);
+        dest.writeString(approved);
+        dest.writeString(statusSupplierConfig);
+        dest.writeString(activatedAt);
+        dest.writeString(listingStart);
+        dest.writeString(listingEnd);
+        dest.writeString(fkVertical);
+        dest.writeString(fkCatalogBrand);
+        dest.writeString(fkCatalogBrandModel);
+        dest.writeString(brandModelEdition);
+        dest.writeString(listingType);
+        dest.writeString(listingCountry);
+        dest.writeString(listingArea);
+        dest.writeString(condition);
+        dest.writeString(conditionPosition);
+        dest.writeString(conditionId);
+        dest.writeString(colorFamilyPosition);
+        dest.writeString(colorFamilyId);
+        dest.writeString(doorsPosition);
+        dest.writeString(doorsId);
+        dest.writeString(power);
+        dest.writeString(driveTypePosition);
+        dest.writeString(driveTypeId);
+        dest.writeString(interior);
+        dest.writeString(exterior);
+        dest.writeString(equipment);
+        dest.writeString(warrantyTypePosition);
+        dest.writeString(warrantyTypeId);
+        dest.writeString(warrantyYearsPosition);
+        dest.writeString(warrantyYearsId);
+        dest.writeString(priceConditionsPosition);
+        dest.writeString(priceConditionsId);
+        dest.writeString(premiumListing);
+        dest.writeString(alternateSku);
+        dest.writeString(originalName);
+        dest.writeString(rootCategory);
+        dest.writeString(agencyLogo);
+        dest.writeString(url);
+        dest.writeString(id);
+        dest.writeString(locationLatitude);
+        dest.writeString(locationLongitude);
+        dest.writeString(googleFormattedAddress);
+        dest.writeString(googlePlaceId);
+        dest.writeString(fkCustomerAddress);
+        dest.writeString(listingRegion);
+        dest.writeString(listingCity);
+        dest.writeString(agencyAddress);
+        dest.writeString(agencyCity);
+        dest.writeString(fkCountryRegion);
+        dest.writeString(fkCountryRegionCity);
+        dest.writeString(fkCountryRegionCityArea);
+        dest.writeString(showListingAddress);
+        dest.writeString(itemContactName);
+        dest.writeString(itemContactEmail);
+        dest.writeString(itemContactMobile);
+        dest.writeString(itemContactHomephone);
+        dest.writeString(agencyName);
+        dest.writeString(productOwnerUrlKey);
+        dest.writeString(productOwner);
+        dest.writeString(fkCustomer);
+        dest.writeString(isAgent);
+        dest.writeString(sellerIsTrusted);
+        dest.writeString(showOfficephone);
+        dest.writeString(showHomephone);
+        dest.writeString(showMobile);
+        dest.writeString(sku);
+        dest.writeString(idCatalogConfig);
+        dest.writeString(attributeSetId);
+        dest.writeString(originalPriceCurrency);
+        dest.writeInt(isCertified);
+        dest.writeString(name);
+        dest.writeString(description);
+        dest.writeString(urlkeyDetails);
+        dest.writeString(priceNotAvailable);
+        dest.writeString(price);
+        dest.writeString(originalPrice);
+        dest.writeString(brand);
+        dest.writeString(brandModel);
+        dest.writeString(topPosition);
+        dest.writeString(mileageNotAvailable);
+        dest.writeString(mileage);
+        dest.writeString(configId);
+        dest.writeString(rejectedComment);
+        dest.writeString(transmission);
+        dest.writeString(transmissionPosition);
+        dest.writeString(transmissionId);
+        dest.writeString(fuel);
+        dest.writeString(fuelPosition);
+        dest.writeString(fuelId);
     }
 }

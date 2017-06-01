@@ -11,7 +11,11 @@ import java.util.List;
 
 public class ResultData {
     @SerializedName("data")
-    public List<CarsData> carsDataList;
+    public CarsData carsDataList;
+    @SerializedName("simples")
+    public SimplesData simplesData;
+    @SerializedName("attributes")
+    public AttributesData attributesData;
     @SerializedName("id")
     public String id;
     @SerializedName("images")
