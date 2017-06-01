@@ -1,10 +1,14 @@
 package com.scoproject.carmudi.di.component;
 
+import android.app.Application;
+
+import com.google.gson.Gson;
 import com.scoproject.carmudi.CarmudiApp;
 import com.scoproject.carmudi.di.module.AppModule;
 import com.scoproject.carmudi.di.module.AppUIModule;
 import com.scoproject.carmudi.di.module.NetworkModule;
 import com.scoproject.carmudi.di.scope.AppScope;
+import com.scoproject.carmudi.ui.home.service.HomeService;
 
 import java.io.File;
 
@@ -27,4 +31,11 @@ public interface AppComponent extends IAppComponent {
                     .build();
         }
     }
+
+    Application getApplication();
+    Gson getGson();
+
+    //API Services
+    HomeService getHomeService();
+
 }
