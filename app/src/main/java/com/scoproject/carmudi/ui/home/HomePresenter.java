@@ -1,5 +1,6 @@
 package com.scoproject.carmudi.ui.home;
 
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -22,6 +23,7 @@ public class HomePresenter extends ViewPresenter<HomeView> {
     Gson gson;
 
     private HomeActivity mActivity;
+    private CompositeDisposable mCompositeDisposable;
 
     public HomePresenter(HomeActivity activity){
         mActivity = activity;
@@ -29,14 +31,22 @@ public class HomePresenter extends ViewPresenter<HomeView> {
 
     @Override
     public void onLoad(){
-        CompositeDisposable compositeDisposable = new CompositeDisposable();
-        mHomeService.init(1,1);
-        compositeDisposable.add(
-                mHomeService.getCarsList().subscribe(data ->  Log.d(getClass().getName(),gson.toJson(data)),
+        mCompositeDisposable = new CompositeDisposable();
+        mHomeService.init(1,10);
+        loadData();
+        getView().mSwipeRefreshLayout.setOnRefreshListener(() -> loadData());
+
+    }
+
+    public void loadData(){
+        getView().mSwipeRefreshLayout.setRefreshing(true);
+        mCompositeDisposable.add(
+                mHomeService.getCarsList().subscribe(data -> getView().setData(data.metadata.resultDataList),
                         throwable -> onError(throwable)));
     }
 
     private void onError(Throwable throwable) {
+        getView().mSwipeRefreshLayout.setRefreshing(false);
         Log.d(getClass().getName(), throwable.getMessage());
     }
 }
