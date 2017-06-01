@@ -2,6 +2,7 @@ package com.scoproject.carmudi.ui.home.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.scoproject.carmudi.R;
 import com.scoproject.carmudi.data.ResultData;
+import com.scoproject.carmudi.helper.AppHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,9 +45,11 @@ public class HomeActivityAdapter extends RecyclerView.Adapter<HomeActivityAdapte
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         ResultData data = mResultData.get(position);
+        String[] finalPrice = data.carsDataList.price.split("\\.");
+        Log.d(getClass().getName(), finalPrice[0]);
         holder.mCarName.setText(data.carsDataList.originalName);
         holder.mCarBrand.setText(data.carsDataList.brand);
-        holder.mCarPrice.setText(data.carsDataList.price);
+        holder.mCarPrice.setText(AppHelper.CurrencyHelper(Long.valueOf(finalPrice[0])));
         Glide.with(mContext)
                 .load(data.imageDataList.get(0).url)
                 .placeholder(R.color.cardview_shadow_end_color)
