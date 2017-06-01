@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">Carmudi</string>
+    <string-array name="sorting_list">
+        <item>Oldest</item>
+        <item>Newst</item>
+        <item>Price Low</item>
+        <item>Price High</item>
+        <item>Mileage Low</item>
+        <item>Mileage High</item>
+    </string-array>
 </resources>

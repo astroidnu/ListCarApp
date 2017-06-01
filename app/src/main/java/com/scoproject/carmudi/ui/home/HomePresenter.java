@@ -1,11 +1,15 @@
 package com.scoproject.carmudi.ui.home;
 
-import android.support.v4.widget.SwipeRefreshLayout;
+import android.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
+import android.widget.CheckBox;
 
 import com.google.gson.Gson;
+import com.scoproject.carmudi.R;
 import com.scoproject.carmudi.base.ViewPresenter;
 import com.scoproject.carmudi.data.ResultData;
 import com.scoproject.carmudi.helper.RVHelper;
@@ -34,6 +38,7 @@ public class HomePresenter extends ViewPresenter<HomeView> {
     private List<ResultData> mResultDataList;
     private final static int defaultPage = 1;
     private final static int detaultMaxItem = 5;
+    private AlertDialog dialog;
 
     public HomePresenter(HomeActivity activity){
         mActivity = activity;
@@ -52,6 +57,8 @@ public class HomePresenter extends ViewPresenter<HomeView> {
     public void loadData(int page, int maxSize, boolean isSwipeRefresh){
         if(isSwipeRefresh){
             getView().mSwipeRefreshLayout.setRefreshing(true);
+        }else{
+            getView().mProgressBar.show();
         }
         mHomeService.init(page,maxSize);
         mCompositeDisposable.add(
@@ -68,7 +75,6 @@ public class HomePresenter extends ViewPresenter<HomeView> {
     }
 
     public void loadMore(){
-        getView().mProgressBar.show();
         getView().mHomeRV.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
@@ -95,7 +101,7 @@ public class HomePresenter extends ViewPresenter<HomeView> {
         getView().mToolbarSort.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(getClass().getName(), "onClickSort()");
+                getView().showFilterDialog();
             }
         });
     }
@@ -105,4 +111,5 @@ public class HomePresenter extends ViewPresenter<HomeView> {
         getView().mProgressBar.hide();
         Log.d(getClass().getName(), throwable.getMessage());
     }
+
 }

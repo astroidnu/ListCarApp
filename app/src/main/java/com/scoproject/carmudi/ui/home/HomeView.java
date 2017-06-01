@@ -1,11 +1,14 @@
 package com.scoproject.carmudi.ui.home;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -14,6 +17,7 @@ import android.widget.TextView;
 import com.scoproject.carmudi.R;
 import com.scoproject.carmudi.data.ResultData;
 import com.scoproject.carmudi.ui.home.adapter.HomeActivityAdapter;
+import com.scoproject.carmudi.ui.home.adapter.HomeSortingAdapter;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EViewGroup;
@@ -38,11 +42,16 @@ public class HomeView extends CoordinatorLayout {
     SwipeRefreshLayout mSwipeRefreshLayout;
 
     private HomeActivityAdapter mHomeActivityAdapter;
+    private LayoutInflater mLayoutInflater;
+    private AlertDialog mAlertDialog;
+    private HomeSortingAdapter mHomeSortingAdapter;
 
     @AfterViews
     void init(){
         mToolbarTitle.setText("Home");
+        mLayoutInflater = LayoutInflater.from(getContext());
         mHomeActivityAdapter = new HomeActivityAdapter(getContext());
+        mHomeSortingAdapter = new HomeSortingAdapter(getContext());
         mHomeRV.setLayoutManager(new LinearLayoutManager(getContext()));
         mHomeRV.setAdapter(mHomeActivityAdapter);
 
@@ -51,6 +60,18 @@ public class HomeView extends CoordinatorLayout {
     public void setData(List<ResultData> resultDataList){
         mHomeActivityAdapter.setData(resultDataList);
         mSwipeRefreshLayout.setRefreshing(false);
+    }
+
+    public void showFilterDialog(){
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getContext());
+        LayoutInflater inflater =  mLayoutInflater;
+        final View dialogView = inflater.inflate(R.layout.sorting, null);
+        RecyclerView mSortingRV = (RecyclerView) dialogView.findViewById(R.id.sorting_recyclerview);
+        mSortingRV.setLayoutManager(new LinearLayoutManager(getContext()));
+        mSortingRV.setAdapter(mHomeSortingAdapter);
+        dialogBuilder.setView(dialogView);
+        mAlertDialog = dialogBuilder.create();
+        mAlertDialog.show();
     }
 
 
