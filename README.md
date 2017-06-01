@@ -1,6 +1,6 @@
 # ListCarApp
 
-This is app showing all car datas with cardview. technologies in used : 
+This is app showing all car datas with cardview and based on IDE Android Studio 2.3. technologies in used : 
 1. MVP Pattern
 2. Dagger 2
 3. RxJava 2
