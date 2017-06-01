@@ -1,11 +1,17 @@
 package com.scoproject.carmudi.ui.home;
 
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
 import com.google.gson.Gson;
 import com.scoproject.carmudi.base.ViewPresenter;
+import com.scoproject.carmudi.data.ResultData;
+import com.scoproject.carmudi.helper.RVHelper;
+import com.scoproject.carmudi.ui.home.service.HomeResponse;
 import com.scoproject.carmudi.ui.home.service.HomeService;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -24,6 +30,9 @@ public class HomePresenter extends ViewPresenter<HomeView> {
 
     private HomeActivity mActivity;
     private CompositeDisposable mCompositeDisposable;
+    private List<ResultData> mResultDataList;
+    private final static int defaultPage = 1;
+    private final static int detaultMaxItem = 5;
 
     public HomePresenter(HomeActivity activity){
         mActivity = activity;
@@ -32,21 +41,57 @@ public class HomePresenter extends ViewPresenter<HomeView> {
     @Override
     public void onLoad(){
         mCompositeDisposable = new CompositeDisposable();
-        mHomeService.init(1,10);
-        loadData();
-        getView().mSwipeRefreshLayout.setOnRefreshListener(() -> loadData());
+        loadData(defaultPage,detaultMaxItem, true);
+        loadMore();
+        getView().mSwipeRefreshLayout.setOnRefreshListener(() -> loadData(1,mResultDataList.size(), true));
 
     }
 
-    public void loadData(){
-        getView().mSwipeRefreshLayout.setRefreshing(true);
+    public void loadData(int page, int maxSize, boolean isSwipeRefresh){
+        if(isSwipeRefresh){
+            getView().mSwipeRefreshLayout.setRefreshing(true);
+        }
+        mHomeService.init(page,maxSize);
         mCompositeDisposable.add(
-                mHomeService.getCarsList().subscribe(data -> getView().setData(data.metadata.resultDataList),
+                mHomeService.getCarsList().subscribe(data -> handleOnSuccess(data) ,
                         throwable -> onError(throwable)));
+    }
+
+    public void handleOnSuccess(HomeResponse data){
+        mResultDataList = data.metadata.resultDataList;
+        getView().setData(mResultDataList);
+        getView().mProgressBar.hide();
+        getView().mSwipeRefreshLayout.setRefreshing(false);
+
+    }
+
+    public void loadMore(){
+        getView().mProgressBar.show();
+        getView().mHomeRV.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (RVHelper.lastVisibleItemPosition(recyclerView) >= mResultDataList.size() - 1) {
+                    int pageIndex = 1;
+                    if(mResultDataList.size() % 100 == 0){
+                        loadData(pageIndex++, mResultDataList.size() + 5, false);
+                    }else{
+                        loadData(1, mResultDataList.size() + 5, false);
+                    }
+//                    Log.d(getClass().getName(), String.valueOf(RVHelper.lastVisibleItemPosition(recyclerView)));
+                }
+            }
+        });
     }
 
     private void onError(Throwable throwable) {
         getView().mSwipeRefreshLayout.setRefreshing(false);
+        getView().mProgressBar.hide();
         Log.d(getClass().getName(), throwable.getMessage());
     }
 }

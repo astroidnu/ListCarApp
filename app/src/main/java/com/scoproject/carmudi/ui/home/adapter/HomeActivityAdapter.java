@@ -46,7 +46,6 @@ public class HomeActivityAdapter extends RecyclerView.Adapter<HomeActivityAdapte
     public void onBindViewHolder(ViewHolder holder, int position) {
         ResultData data = mResultData.get(position);
         String[] finalPrice = data.carsDataList.price.split("\\.");
-        Log.d(getClass().getName(), finalPrice[0]);
         holder.mCarName.setText(data.carsDataList.originalName);
         holder.mCarBrand.setText(data.carsDataList.brand);
         holder.mCarPrice.setText(AppHelper.CurrencyHelper(Long.valueOf(finalPrice[0])));

@@ -2,9 +2,11 @@ package com.scoproject.carmudi.ui.home;
 
 import android.content.Context;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.widget.ProgressBar;
 
 import com.scoproject.carmudi.R;
 import com.scoproject.carmudi.data.ResultData;
@@ -23,6 +25,8 @@ import java.util.List;
 public class HomeView extends CoordinatorLayout {
     @ViewById(R.id.home_recyclerview)
     RecyclerView mHomeRV;
+    @ViewById(R.id.home_progressbar)
+    ContentLoadingProgressBar mProgressBar;
     @ViewById(R.id.home_swiperefresh)
     SwipeRefreshLayout mSwipeRefreshLayout;
 
@@ -40,6 +44,7 @@ public class HomeView extends CoordinatorLayout {
         mHomeActivityAdapter.setData(resultDataList);
         mSwipeRefreshLayout.setRefreshing(false);
     }
+
 
     public HomeView(Context context) {
         super(context);
