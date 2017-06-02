@@ -49,31 +49,6 @@ public class NetworkModule {
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
-
-        OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                .addInterceptor(chain -> {
-                    Request original = chain.request();
-
-                    // Customize the request
-                    Request request = original.newBuilder()
-                            .header("Content-Type", "application/json")
-                            .removeHeader("Pragma")
-                            .header("Cache-Control", String.format("max-age=%d", BuildConfig.CACHETIME))
-                            .build();
-
-                    okhttp3.Response response = chain.proceed(request);
-                    response.cacheResponse();
-                    // Customize or return the response
-                    return response;
-                })
-                .writeTimeout(90, TimeUnit.SECONDS)
-                .readTimeout(90, TimeUnit.SECONDS)
-                .connectTimeout(90, TimeUnit.SECONDS)
-                .addInterceptor(loggingInterceptor)
-                .cache(cache)
-                .build();
-
-
         return new Retrofit.Builder()
                 .baseUrl(BuildConfig.BASEURL)
                 .client(getUnsafeOkHttpClient())
@@ -136,10 +111,26 @@ public class NetworkModule {
             loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
             OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                    .addInterceptor(chain -> {
+                        Request original = chain.request();
+
+                        // Customize the request
+                        Request request = original.newBuilder()
+                                .header("Content-Type", "application/json")
+                                .removeHeader("Pragma")
+                                .header("Cache-Control", String.format("max-age=%d", BuildConfig.CACHETIME))
+                                .build();
+
+                        okhttp3.Response response = chain.proceed(request);
+                        response.cacheResponse();
+                        // Customize or return the response
+                        return response;
+                    })
                     .addInterceptor(loggingInterceptor)
                     .cache(cache)
-                    .readTimeout(180, TimeUnit.SECONDS)
-                    .connectTimeout(180, TimeUnit.SECONDS)
+                    .writeTimeout(90, TimeUnit.SECONDS)
+                    .readTimeout(90, TimeUnit.SECONDS)
+                    .connectTimeout(90, TimeUnit.SECONDS)
                     .hostnameVerifier((hostname, session) -> true)
                     .sslSocketFactory(sslSocketFactory)
                     .build();

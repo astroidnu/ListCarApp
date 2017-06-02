@@ -49,10 +49,18 @@ public class HomeActivityAdapter extends RecyclerView.Adapter<HomeActivityAdapte
         holder.mCarName.setText(data.carsDataList.originalName);
         holder.mCarBrand.setText(data.carsDataList.brand);
         holder.mCarPrice.setText(AppHelper.CurrencyHelper(Long.valueOf(finalPrice[0])));
-        Glide.with(mContext)
-                .load(data.imageDataList.get(0).url)
-                .placeholder(R.color.cardview_shadow_end_color)
-                .into(holder.mCarThumb);
+        try{
+            Glide.with(mContext)
+                    .load(data.imageDataList.get(0).url)
+                    .placeholder(R.drawable.placeholder)
+                    .into(holder.mCarThumb);
+        }catch (Exception e){
+            Glide.with(mContext)
+                    .load(R.drawable.placeholder)
+                    .placeholder(R.drawable.placeholder)
+                    .into(holder.mCarThumb);
+        }
+
     }
 
     @Override

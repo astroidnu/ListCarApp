@@ -20,4 +20,44 @@ public class ResultData {
     public String id;
     @SerializedName("images")
     public List<ImageData> imageDataList;
+
+    public CarsData getCarsDataList() {
+        return carsDataList;
+    }
+
+    public void setCarsDataList(CarsData carsDataList) {
+        this.carsDataList = carsDataList;
+    }
+
+    public SimplesData getSimplesData() {
+        return simplesData;
+    }
+
+    public void setSimplesData(SimplesData simplesData) {
+        this.simplesData = simplesData;
+    }
+
+    public AttributesData getAttributesData() {
+        return attributesData;
+    }
+
+    public void setAttributesData(AttributesData attributesData) {
+        this.attributesData = attributesData;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public List<ImageData> getImageDataList() {
+        return imageDataList;
+    }
+
+    public void setImageDataList(List<ImageData> imageDataList) {
+        this.imageDataList = imageDataList;
+    }
 }
