@@ -13,6 +13,7 @@ import com.scoproject.carmudi.R;
 import com.scoproject.carmudi.base.ViewPresenter;
 import com.scoproject.carmudi.data.ResultData;
 import com.scoproject.carmudi.helper.RVHelper;
+import com.scoproject.carmudi.ui.home.adapter.HomeSortingAdapter;
 import com.scoproject.carmudi.ui.home.service.HomeResponse;
 import com.scoproject.carmudi.ui.home.service.HomeService;
 
@@ -37,8 +38,9 @@ public class HomePresenter extends ViewPresenter<HomeView> {
     private CompositeDisposable mCompositeDisposable;
     private List<ResultData> mResultDataList;
     private final static int defaultPage = 1;
-    private final static int detaultMaxItem = 5;
+    private final static int defaultMaxItem = 5;
     private AlertDialog dialog;
+    private HomeSortingAdapter mHomeSortingAdapter;
 
     public HomePresenter(HomeActivity activity){
         mActivity = activity;
@@ -46,13 +48,15 @@ public class HomePresenter extends ViewPresenter<HomeView> {
 
     @Override
     public void onLoad(){
+        mHomeSortingAdapter = new HomeSortingAdapter(getView().getContext(), this);
         mCompositeDisposable = new CompositeDisposable();
-        loadData(defaultPage,detaultMaxItem, true);
+        loadData(defaultPage,defaultMaxItem, true);
         loadMore();
         onSort();
         getView().mSwipeRefreshLayout.setOnRefreshListener(() -> loadData(1,mResultDataList.size(), true));
 
     }
+
     /*Load Data From API*/
     public void loadData(int page, int maxSize, boolean isSwipeRefresh){
         if(isSwipeRefresh){
@@ -101,9 +105,17 @@ public class HomePresenter extends ViewPresenter<HomeView> {
         getView().mToolbarSort.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getView().showFilterDialog();
+                getView().showFilterDialog(mHomeSortingAdapter);
             }
         });
+    }
+
+    public void loadSortData(String filterKey){
+        mHomeService.init(defaultPage,defaultMaxItem,filterKey);
+        mCompositeDisposable.add(
+                mHomeService.getCarsList().subscribe(data -> handleOnSuccess(data) ,
+                        throwable -> onError(throwable)));
+        getView().mAlertDialog.hide();
     }
 
     public void onError(Throwable throwable) {

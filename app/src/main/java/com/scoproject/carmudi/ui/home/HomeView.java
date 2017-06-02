@@ -7,6 +7,7 @@ import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageButton;
@@ -43,15 +44,14 @@ public class HomeView extends CoordinatorLayout {
 
     private HomeActivityAdapter mHomeActivityAdapter;
     private LayoutInflater mLayoutInflater;
-    private AlertDialog mAlertDialog;
-    private HomeSortingAdapter mHomeSortingAdapter;
+    public AlertDialog mAlertDialog;
+
 
     @AfterViews
     void init(){
         mToolbarTitle.setText("Home");
         mLayoutInflater = LayoutInflater.from(getContext());
         mHomeActivityAdapter = new HomeActivityAdapter(getContext());
-        mHomeSortingAdapter = new HomeSortingAdapter(getContext());
         mHomeRV.setLayoutManager(new LinearLayoutManager(getContext()));
         mHomeRV.setAdapter(mHomeActivityAdapter);
 
@@ -62,18 +62,17 @@ public class HomeView extends CoordinatorLayout {
         mSwipeRefreshLayout.setRefreshing(false);
     }
 
-    public void showFilterDialog(){
+    public void showFilterDialog(HomeSortingAdapter homeSortingAdapter){
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getContext());
         LayoutInflater inflater =  mLayoutInflater;
         final View dialogView = inflater.inflate(R.layout.sorting, null);
         RecyclerView mSortingRV = (RecyclerView) dialogView.findViewById(R.id.sorting_recyclerview);
         mSortingRV.setLayoutManager(new LinearLayoutManager(getContext()));
-        mSortingRV.setAdapter(mHomeSortingAdapter);
+        mSortingRV.setAdapter(homeSortingAdapter);
         dialogBuilder.setView(dialogView);
         mAlertDialog = dialogBuilder.create();
         mAlertDialog.show();
     }
-
 
     public HomeView(Context context) {
         super(context);

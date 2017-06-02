@@ -2,6 +2,7 @@ package com.scoproject.carmudi.ui.home.service;
 
 import android.util.Log;
 
+import com.scoproject.carmudi.BuildConfig;
 import com.scoproject.carmudi.networking.NetworkService;
 
 import io.reactivex.BackpressureStrategy;
@@ -17,9 +18,17 @@ public class HomeService {
     private final NetworkService networkService;
     private int mPageSize;
     private int mMaxItemSize;
+    private String mSortItem;
+
     public void init(int pagesize, int maxitemsize){
         mPageSize = pagesize;
         mMaxItemSize = maxitemsize;
+    }
+
+    public void init(int pagesize, int maxitemsize, String sortItem){
+        mPageSize = pagesize;
+        mMaxItemSize = maxitemsize;
+        mSortItem = sortItem;
     }
 
     public HomeService(NetworkService networkService) {
@@ -28,12 +37,21 @@ public class HomeService {
 
 
     public Flowable<HomeResponse> getCarsList() {
-        return networkService.getCars("https://www.carmudi.co.id/api/cars/page:"+mPageSize+"/maxitems:"+mMaxItemSize+"/")
+        return networkService.getCars(BuildConfig.BASEURL+ "page:"+mPageSize+"/maxitems:"+mMaxItemSize+"/"+"sort:" + mSortItem)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnError(this::handleAccountError)
                 .toFlowable(BackpressureStrategy.BUFFER);
     }
+
+    public Flowable<HomeResponse> getCarsListSort() {
+        return networkService.getCars(BuildConfig.BASEURL+ "page:"+mPageSize+"/maxitems:"+mMaxItemSize+"/" +"sort:" + mSortItem)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnError(this::handleAccountError)
+                .toFlowable(BackpressureStrategy.BUFFER);
+    }
+
 
     private void handleAccountError(Throwable throwable) {
         Log.e(getClass().getName(), throwable.getMessage());
