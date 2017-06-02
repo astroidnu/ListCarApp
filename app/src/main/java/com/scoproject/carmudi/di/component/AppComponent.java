@@ -8,6 +8,7 @@ import com.scoproject.carmudi.di.module.AppModule;
 import com.scoproject.carmudi.di.module.AppUIModule;
 import com.scoproject.carmudi.di.module.NetworkModule;
 import com.scoproject.carmudi.di.scope.AppScope;
+import com.scoproject.carmudi.model.CarModel;
 import com.scoproject.carmudi.ui.home.service.HomeService;
 
 import java.io.File;
@@ -37,5 +38,9 @@ public interface AppComponent extends IAppComponent {
 
     //API Services
     HomeService getHomeService();
+
+    //Model DB
+    CarModel carModel();
+    void inject(CarModel carModel);
 
 }

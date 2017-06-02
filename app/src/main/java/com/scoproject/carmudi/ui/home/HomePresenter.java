@@ -1,6 +1,8 @@
 package com.scoproject.carmudi.ui.home;
 
 import android.app.AlertDialog;
+import android.content.Context;
+import android.net.ConnectivityManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,7 +14,9 @@ import com.google.gson.Gson;
 import com.scoproject.carmudi.R;
 import com.scoproject.carmudi.base.ViewPresenter;
 import com.scoproject.carmudi.data.ResultData;
+import com.scoproject.carmudi.data.db.CarsData;
 import com.scoproject.carmudi.helper.RVHelper;
+import com.scoproject.carmudi.model.CarModel;
 import com.scoproject.carmudi.ui.home.adapter.HomeSortingAdapter;
 import com.scoproject.carmudi.ui.home.service.HomeResponse;
 import com.scoproject.carmudi.ui.home.service.HomeService;
@@ -34,6 +38,9 @@ public class HomePresenter extends ViewPresenter<HomeView> {
     @Inject
     Gson gson;
 
+    @Inject
+    CarModel mCarModel;
+
     private HomeActivity mActivity;
     private CompositeDisposable mCompositeDisposable;
     private List<ResultData> mResultDataList;
@@ -50,7 +57,11 @@ public class HomePresenter extends ViewPresenter<HomeView> {
     public void onLoad(){
         mHomeSortingAdapter = new HomeSortingAdapter(getView().getContext(), this);
         mCompositeDisposable = new CompositeDisposable();
-        loadData(defaultPage,defaultMaxItem, true);
+        if(isNetworkConnected()){
+            loadData(defaultPage,defaultMaxItem, true);
+        }else{
+//            getView().setData();
+        }
         loadMore();
         onSort();
         getView().mSwipeRefreshLayout.setOnRefreshListener(() -> loadData(1,mResultDataList.size(), true));
@@ -71,6 +82,13 @@ public class HomePresenter extends ViewPresenter<HomeView> {
     }
 
     public void handleOnSuccess(HomeResponse data){
+        mCarModel.clear();
+        List<ResultData> resultDataList = data.metadata.resultDataList;
+        for(ResultData resultData : resultDataList){
+            CarsData carsData = resultData.carsDataList;
+            mCarModel.save(carsData);
+        }
+
         mResultDataList = data.metadata.resultDataList;
         getView().setData(mResultDataList);
         getView().mProgressBar.hide();
@@ -123,5 +141,12 @@ public class HomePresenter extends ViewPresenter<HomeView> {
         getView().mProgressBar.hide();
         Log.d(getClass().getName(), throwable.getMessage());
     }
+
+    private boolean isNetworkConnected() {
+        ConnectivityManager cm = (ConnectivityManager) mActivity.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        return cm.getActiveNetworkInfo() != null;
+    }
+
 
 }

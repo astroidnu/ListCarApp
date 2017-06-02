@@ -13,7 +13,7 @@ import org.greenrobot.greendao.database.DatabaseStatement;
 /** 
  * DAO for table "CARS_DATA".
 */
-public class CarsDataDao extends AbstractDao<CarsData, Void> {
+public class CarsDataDao extends AbstractDao<CarsData, String> {
 
     public static final String TABLENAME = "CARS_DATA";
 
@@ -64,7 +64,7 @@ public class CarsDataDao extends AbstractDao<CarsData, Void> {
         public final static Property AgencyLogo = new Property(39, String.class, "agencyLogo", false, "AGENCY_LOGO");
         public final static Property NewProduct = new Property(40, Boolean.class, "newProduct", false, "NEW_PRODUCT");
         public final static Property Url = new Property(41, String.class, "url", false, "URL");
-        public final static Property Id = new Property(42, String.class, "id", false, "ID");
+        public final static Property Id = new Property(42, String.class, "id", true, "ID");
         public final static Property LocationLatitude = new Property(43, String.class, "locationLatitude", false, "LOCATION_LATITUDE");
         public final static Property LocationLongitude = new Property(44, String.class, "locationLongitude", false, "LOCATION_LONGITUDE");
         public final static Property GoogleFormattedAddress = new Property(45, String.class, "googleFormattedAddress", false, "GOOGLE_FORMATTED_ADDRESS");
@@ -172,7 +172,7 @@ public class CarsDataDao extends AbstractDao<CarsData, Void> {
                 "\"AGENCY_LOGO\" TEXT," + // 39: agencyLogo
                 "\"NEW_PRODUCT\" INTEGER," + // 40: newProduct
                 "\"URL\" TEXT," + // 41: url
-                "\"ID\" TEXT," + // 42: id
+                "\"ID\" TEXT PRIMARY KEY NOT NULL UNIQUE ," + // 42: id
                 "\"LOCATION_LATITUDE\" TEXT," + // 43: locationLatitude
                 "\"LOCATION_LONGITUDE\" TEXT," + // 44: locationLongitude
                 "\"GOOGLE_FORMATTED_ADDRESS\" TEXT," + // 45: googleFormattedAddress
@@ -1164,8 +1164,8 @@ public class CarsDataDao extends AbstractDao<CarsData, Void> {
     }
 
     @Override
-    public Void readKey(Cursor cursor, int offset) {
-        return null;
+    public String readKey(Cursor cursor, int offset) {
+        return cursor.isNull(offset + 42) ? null : cursor.getString(offset + 42);
     }    
 
     @Override
@@ -1366,20 +1366,22 @@ public class CarsDataDao extends AbstractDao<CarsData, Void> {
      }
     
     @Override
-    protected final Void updateKeyAfterInsert(CarsData entity, long rowId) {
-        // Unsupported or missing PK type
-        return null;
+    protected final String updateKeyAfterInsert(CarsData entity, long rowId) {
+        return entity.getId();
     }
     
     @Override
-    public Void getKey(CarsData entity) {
-        return null;
+    public String getKey(CarsData entity) {
+        if(entity != null) {
+            return entity.getId();
+        } else {
+            return null;
+        }
     }
 
     @Override
     public boolean hasKey(CarsData entity) {
-        // TODO
-        return false;
+        return entity.getId() != null;
     }
 
     @Override

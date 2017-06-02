@@ -11,6 +11,8 @@ import com.scoproject.carmudi.data.SimplesData;
 
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
+import org.greenrobot.greendao.annotation.Id;
+import org.greenrobot.greendao.annotation.Unique;
 
 /**
  * Created by ibnumuzzakkir on 6/1/17.
@@ -101,6 +103,8 @@ public class CarsData implements Parcelable {
     public Boolean newProduct;
     @SerializedName("url")
     public String url;
+    @Unique
+    @Id
     @SerializedName("id")
     public String id;
     @SerializedName("location_latitude")
