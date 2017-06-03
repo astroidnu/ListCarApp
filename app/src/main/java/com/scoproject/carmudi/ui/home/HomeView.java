@@ -30,7 +30,7 @@ import java.util.List;
  * Created by ibnumuzzakkir on 6/1/17.
  */
 @EViewGroup(R.layout.activity_home)
-public class HomeView extends CoordinatorLayout {
+public class HomeView extends CoordinatorLayout implements HomeContract.View{
     @ViewById(R.id.home_recyclerview)
     RecyclerView mHomeRV;
     @ViewById(R.id.home_progressbar)
@@ -42,10 +42,11 @@ public class HomeView extends CoordinatorLayout {
     @ViewById(R.id.home_swiperefresh)
     SwipeRefreshLayout mSwipeRefreshLayout;
 
+
     private HomeActivityAdapter mHomeActivityAdapter;
+
     private LayoutInflater mLayoutInflater;
     public AlertDialog mAlertDialog;
-
 
     @AfterViews
     void init(){
@@ -54,7 +55,11 @@ public class HomeView extends CoordinatorLayout {
         mHomeActivityAdapter = new HomeActivityAdapter(getContext());
         mHomeRV.setLayoutManager(new LinearLayoutManager(getContext()));
         mHomeRV.setAdapter(mHomeActivityAdapter);
+    }
 
+    @Override
+    public void setProgressIndicator(boolean active) {
+        mSwipeRefreshLayout.setRefreshing(active);
     }
 
     public void setData(List<ResultData> resultDataList){
@@ -77,4 +82,5 @@ public class HomeView extends CoordinatorLayout {
     public HomeView(Context context) {
         super(context);
     }
+
 }

@@ -20,10 +20,12 @@ public class HomeSortingAdapter extends RecyclerView.Adapter<HomeSortingAdapter.
     private Context mContext;
     private LayoutInflater mLayoutInflater;
     private HomePresenter mHomePresenter;
+    private callback mCallback;
 
-    public HomeSortingAdapter(Context context, HomePresenter homePresenter){
+    public HomeSortingAdapter(Context context, callback mCallback){
         mContext = context;
-        mHomePresenter = homePresenter;
+        this.mCallback = mCallback;
+//        mHomePresenter = homePresenter;
         mLayoutInflater = LayoutInflater.from(context);
     }
 
@@ -40,7 +42,8 @@ public class HomeSortingAdapter extends RecyclerView.Adapter<HomeSortingAdapter.
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mHomePresenter.loadSortData(sortTitle);
+                mCallback.onClickVHItem(sortTitle);
+//                mHomePresenter.loadSortData(sortTitle);
             }
         });
     }
@@ -56,5 +59,9 @@ public class HomeSortingAdapter extends RecyclerView.Adapter<HomeSortingAdapter.
             super(itemView);
             mSortingTitle = (TextView) itemView.findViewById(R.id.item_sorting_title);
         }
+    }
+
+    public interface callback{
+        void onClickVHItem(String key);
     }
 }

@@ -22,6 +22,9 @@ import com.scoproject.carmudi.ui.home.adapter.HomeSortingAdapter;
 import com.scoproject.carmudi.ui.home.service.HomeResponse;
 import com.scoproject.carmudi.ui.home.service.HomeService;
 
+import org.reactivestreams.Subscriber;
+import org.reactivestreams.Subscription;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,14 +32,13 @@ import java.util.List;
 import javax.inject.Inject;
 
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.subscribers.ResourceSubscriber;
 
 /**
  * Created by ibnumuzzakkir on 6/1/17.
  */
 
-public class HomePresenter extends ViewPresenter<HomeView> {
-    @Inject
-    HomeService mHomeService;
+public class HomePresenter extends ViewPresenter<HomeView>{
 
     @Inject
     Gson gson;
@@ -50,63 +52,86 @@ public class HomePresenter extends ViewPresenter<HomeView> {
     private final static int defaultPage = 1;
     private final static int defaultMaxItem = 5;
     private AlertDialog dialog;
-    private HomeSortingAdapter mHomeSortingAdapter;
+    private HomeService mHomeService;
 
-    public HomePresenter(HomeActivity activity){
+    public HomePresenter(HomeActivity activity, HomeService service){
         mActivity = activity;
+        mHomeService = service;
     }
 
     @Override
     public void onLoad(){
-        mHomeSortingAdapter = new HomeSortingAdapter(getView().getContext(), this);
         mCompositeDisposable = new CompositeDisposable();
-        if(isNetworkConnected()){
-            loadData(defaultPage,defaultMaxItem, true);
-        }else{
-            mResultDataList = new ArrayList<>();
-            Log.d(getClass().getName(), gson.toJson(mCarModel.loadAll()));
-            ResultData resultData = new ResultData();
-            for(CarsData carsData : mCarModel.loadAll()){
-                resultData.setCarsDataList(carsData);
-                mResultDataList.add(resultData);
-            }
-            Log.d(getClass().getName(), gson.toJson(mResultDataList));
-            getView().setData(mResultDataList);
-            getView().mProgressBar.hide();
-        }
-        loadMore();
-        onSort();
-        getView().mSwipeRefreshLayout.setOnRefreshListener(() -> loadData(1,mResultDataList.size(), true));
+//        loadData(defaultPage,defaultMaxItem, true);
+//        if(isNetworkConnected()){
+
+//        }else{
+//            mResultDataList = new ArrayList<>();
+//            Log.d(getClass().getName(), gson.toJson(mCarModel.loadAll()));
+//            ResultData resultData = new ResultData();
+//            for(CarsData carsData : mCarModel.loadAll()){
+//                resultData.setCarsDataList(carsData);
+//                mResultDataList.add(resultData);
+//            }
+//            Log.d(getClass().getName(), gson.toJson(mResultDataList));
+//            getView().setData(mResultDataList);
+//            getView().mProgressBar.hide();
+//        }
+//        getView().mSwipeRefreshLayout.setOnRefreshListener(() -> loadData(1,mResultDataList.size(), true));
+
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
 
     }
 
     /*Load Data From API*/
     public void loadData(int page, int maxSize, boolean isSwipeRefresh){
-        if(isNetworkConnected()){
-            if(isSwipeRefresh){
-                getView().mSwipeRefreshLayout.setRefreshing(true);
-            }else{
-                getView().mProgressBar.show();
-            }
+//        internet = isNetworkConnected();
+//        if(internet){
+//            if(isSwipeRefresh){
+//                getView().mSwipeRefreshLayout.setRefreshing(true);
+//            }else{
+//                getView().mProgressBar.show();
+//            }
             mHomeService.init(page,maxSize);
-            mCompositeDisposable.add(
-                    mHomeService.getCarsList().subscribe(data -> handleOnSuccess(data) ,
-                            throwable -> onError(throwable)));
-        }else{
-            getView().mProgressBar.hide();
-            getView().mSwipeRefreshLayout.setRefreshing(false);
-            Snackbar.make(getView(), "No Internet Connection", Snackbar.LENGTH_SHORT).show();
-        }
+        getView().setProgressIndicator(true);
+          mCompositeDisposable.add(mHomeService.getCarsList().subscribeWith(new ResourceSubscriber<HomeResponse>() {
+                @Override
+                public void onNext(HomeResponse homeResponse) {
+                        handleOnSuccess(homeResponse);
+                }
 
+                @Override
+                public void onError(Throwable t) {
+
+                }
+
+                @Override
+                public void onComplete() {
+
+                }
+            }));
+
+//                    mHomeService.getCarsList().subscribe(data -> handleOnSuccess(data) ,
+//                            throwable -> onError(throwable));
+//        }else{
+//            getView().mProgressBar.hide();
+//            getView().mSwipeRefreshLayout.setRefreshing(false);
+//            Snackbar.make(getView(), "No Internet Connection", Snackbar.LENGTH_SHORT).show();
+//        }
     }
 
     public void handleOnSuccess(HomeResponse data){
-        mCarModel.clear();
+        getView().setProgressIndicator(false);
+//        mCarModel.clear();
         List<ResultData> resultDataList = data.metadata.resultDataList;
-        for(ResultData resultData : resultDataList){
-            CarsData carsData = resultData.carsDataList;
-            mCarModel.save(carsData);
-        }
+//        for(ResultData resultData : resultDataList){
+//            CarsData carsData = resultData.carsDataList;
+//            mCarModel.save(carsData);
+//        }
         mResultDataList = data.metadata.resultDataList;
         getView().setData(mResultDataList);
         getView().mProgressBar.hide();
@@ -137,15 +162,6 @@ public class HomePresenter extends ViewPresenter<HomeView> {
         });
     }
 
-    private void onSort(){
-        getView().mToolbarSort.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getView().showFilterDialog(mHomeSortingAdapter);
-            }
-        });
-    }
-
     public void loadSortData(String filterKey){
         getView().mAlertDialog.hide();
         if(isNetworkConnected()){
@@ -172,6 +188,4 @@ public class HomePresenter extends ViewPresenter<HomeView> {
 
         return cm.getActiveNetworkInfo() != null;
     }
-
-
 }
