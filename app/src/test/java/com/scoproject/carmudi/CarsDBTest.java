@@ -38,20 +38,19 @@ public class CarsDBTest {
     }
 
     @Test
-    public void testBasics() {
+    public void testBasicsDB() {
         CarsData entity = new CarsData();
         entity.setName("Brio RS 2017");
         entity.setId("123");
         entity.setAgencyName("Ibnu");
         daoSession.insert(entity);
-//        assertNotNull(entity.getId());
-//        assertNotNull(carsDataDao.load(entity.getId()));
+        assertNotNull(entity.getId());
+        assertNotNull(carsDataDao.load(entity.getId()));
         assertEquals(1, carsDataDao.count());
-//        assertEquals(1, daoSession.loadAll(CarsData.class).size());
-//
-//        daoSession.update(entity);
-//        daoSession.delete(entity);
-//        assertNull(carsDataDao.load(entity.getId()));
+        assertEquals(1, daoSession.loadAll(CarsData.class).size());
+        daoSession.update(entity);
+        daoSession.delete(entity);
+        assertNull(carsDataDao.load(entity.getId()));
     }
 
 }
