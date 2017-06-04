@@ -61,36 +61,12 @@ public class HomePresenter extends ViewPresenter<HomeView>{
         mHomeService = service;
         mNetworkHelper = networkHelper;
         mCarModel = carModel;
-
-
     }
 
     @Override
     public void onLoad(){
         mCompositeDisposable = new CompositeDisposable();
-//        loadData(defaultPage,defaultMaxItem, true);
-//        if(isNetworkConnected()){
-
-//        }else{
-//            mResultDataList = new ArrayList<>();
-//            Log.d(getClass().getName(), gson.toJson(mCarModel.loadAll()));
-//            ResultData resultData = new ResultData();
-//            for(CarsData carsData : mCarModel.loadAll()){
-//                resultData.setCarsDataList(carsData);
-//                mResultDataList.add(resultData);
-//            }
-//            Log.d(getClass().getName(), gson.toJson(mResultDataList));
-//            getView().setData(mResultDataList);
-//            getView().mProgressBar.hide();
-//        }
         getView().setOnRefreshListener(() -> loadData(defaultPage,defaultPage,true));
-
-    }
-
-    @Override
-    public void onResume(){
-        super.onResume();
-
     }
 
     /*Load Data From API*/
