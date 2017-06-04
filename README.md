@@ -16,3 +16,7 @@ For automation UI and unit test, this app using following technology:
 2. Mockito
 3. Robolectric
 
+# License
+
+The is open-sourced software licensed under the MIT license
+
