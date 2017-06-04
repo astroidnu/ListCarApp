@@ -1,6 +1,6 @@
 # ListCarApp
 
-![alt text](https://github.com/astroidnu/ListCarApp/blob/master/ss1.png)
+![alt text](https://github.com/astroidnu/ListCarApp/blob/master/ss1.png = 250x250)
 ![alt text](https://raw.githubusercontent.com/astroidnu/ListCarApp/blob/master/ss2.png)
 
 This is app showing all car datas with cardview. coded using IDE Android Studio 2.3 and with following technologies: 
