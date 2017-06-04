@@ -1,6 +1,6 @@
 # ListCarApp
 ![Alt text](https://github.com/astroidnu/ListCarApp/blob/master/ss1.jpg "List car")
-![Alt text](https://github.com/astroidnu/ListCarApp/blob/master/ss2.jpg "List car")
+![Alt text](https://github.com/astroidnu/ListCarApp/blob/master/ss2.jpg "Sorting Dialog")
 
 This is app showing all car datas with cardview. coded using IDE Android Studio 2.3 and with following technologies: 
 
