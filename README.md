@@ -1,6 +1,6 @@
 # ListCarApp
 <a href="#"><img src="https://github.com/astroidnu/ListCarApp/blob/master/ss1.png" align="left" height="500" width="250" ></a>
-<a href="#"><img src="https://github.com/astroidnu/ListCarApp/blob/master/ss2.png" align="left" height="500" width="250" ></a>
+<a href="#"><img src="https://github.com/astroidnu/ListCarApp/blob/master/ss2.png" align="right" height="500" width="250" ></a>
 
 <br /> This is app showing all car datas with cardview. coded using IDE Android Studio 2.3 and with following technologies: 
 
