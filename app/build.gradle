@@ -81,6 +81,9 @@ dependencies {
     testCompile "org.powermock:powermock-module-junit4:1.6.5"
     testCompile "org.powermock:powermock-module-junit4-rule:1.6.5"
     testCompile "org.powermock:powermock-api-mockito:1.6.5"
+    // Robolectric
+    testCompile "org.robolectric:robolectric:3.3.2"
+    testCompile "org.robolectric:shadows-multidex:3.0"
 
     //Android Annotation
     apt "org.androidannotations:androidannotations:$AAVersion"

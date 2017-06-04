@@ -3,6 +3,7 @@ package com.scoproject.carmudi.ui.home;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -34,7 +36,7 @@ public class HomeView extends CoordinatorLayout implements HomeContract.View{
     @ViewById(R.id.home_recyclerview)
     RecyclerView mHomeRV;
     @ViewById(R.id.home_progressbar)
-    ContentLoadingProgressBar mProgressBar;
+    LinearLayout mProgressBar;
     @ViewById(R.id.toolbar_title)
     TextView mToolbarTitle;
     @ViewById(R.id.toolbar_sort)
@@ -62,9 +64,15 @@ public class HomeView extends CoordinatorLayout implements HomeContract.View{
         mSwipeRefreshLayout.setRefreshing(active);
     }
 
+    @Override
     public void setData(List<ResultData> resultDataList){
         mHomeActivityAdapter.setData(resultDataList);
         mSwipeRefreshLayout.setRefreshing(false);
+    }
+
+    @Override
+    public void setAlertNoInternet(boolean active) {
+        Snackbar.make(this, "No Internet Connection", Snackbar.LENGTH_SHORT).show();
     }
 
     public void showFilterDialog(HomeSortingAdapter homeSortingAdapter){

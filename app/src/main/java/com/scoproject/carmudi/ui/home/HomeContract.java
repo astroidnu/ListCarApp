@@ -14,9 +14,10 @@ public interface HomeContract {
     interface View{
         void setProgressIndicator(boolean active);
         void setData(List<ResultData> resultDataList);
+        void setAlertNoInternet(boolean active);
     }
 
     interface UserActionsListener{
-        void loadSortData(String key);
+
     }
 }
