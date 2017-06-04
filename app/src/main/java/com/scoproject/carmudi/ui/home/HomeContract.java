@@ -1,5 +1,7 @@
 package com.scoproject.carmudi.ui.home;
 
+import android.support.v4.widget.SwipeRefreshLayout;
+
 import com.scoproject.carmudi.data.ResultData;
 
 import java.util.List;
@@ -15,6 +17,8 @@ public interface HomeContract {
         void setProgressIndicator(boolean active);
         void setData(List<ResultData> resultDataList);
         void setAlertNoInternet(boolean active);
+        void setOnRefreshListener(SwipeRefreshLayout.OnRefreshListener onRefreshListener);
+        void hideAlertDialog();
     }
 
     interface UserActionsListener{

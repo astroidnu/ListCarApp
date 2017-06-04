@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.support.design.widget.Snackbar;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -82,7 +83,7 @@ public class HomePresenter extends ViewPresenter<HomeView>{
 //            getView().setData(mResultDataList);
 //            getView().mProgressBar.hide();
 //        }
-//        getView().mSwipeRefreshLayout.setOnRefreshListener(() -> loadData(1,mResultDataList.size(), true));
+        getView().setOnRefreshListener(() -> loadData(defaultPage,defaultPage,true));
 
     }
 
@@ -93,7 +94,8 @@ public class HomePresenter extends ViewPresenter<HomeView>{
     }
 
     /*Load Data From API*/
-    public void loadData(int page, int maxSize, boolean isNetworkConnected){
+    public void loadData(int page, int maxSize,
+                         boolean isNetworkConnected){
         if(isNetworkConnected){
             getView().setProgressIndicator(true);
             mHomeService.init(page,maxSize);
@@ -114,6 +116,13 @@ public class HomePresenter extends ViewPresenter<HomeView>{
                 }
             }));
         }else{
+            List<ResultData> resultDataList = new ArrayList<>();
+            ResultData resultData = new ResultData();
+            for(CarsData carsData : mCarModel.loadAll()){
+                resultData.setCarsDataList(carsData);
+            }
+            resultDataList.add(resultData);
+            getView().setData(resultDataList);
             getView().setProgressIndicator(false);
             getView().setAlertNoInternet(true);
         }
@@ -153,17 +162,18 @@ public class HomePresenter extends ViewPresenter<HomeView>{
         });
     }
 
-    public void loadSortData(String filterKey){
-        getView().mAlertDialog.hide();
-        if(mNetworkHelper.isNetworkConnected()){
+    public void loadSortData(String filterKey,   boolean isNetworkConnected){
+        getView().hideAlertDialog();
+        if(isNetworkConnected){
+            getView().setProgressIndicator(true);
             mHomeService.init(defaultPage,defaultMaxItem,filterKey);
             mCompositeDisposable.add(
                     mHomeService.getCarsList().subscribe(data -> handleOnSuccess(data) ,
                             throwable -> onError(throwable)));
         }else{
-            Snackbar.make(getView(), "No Internet Connection", Snackbar.LENGTH_SHORT).show();
+            getView().setProgressIndicator(false);
+            getView().setAlertNoInternet(true);
         }
-
     }
 
 

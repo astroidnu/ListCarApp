@@ -65,6 +65,6 @@ public class HomeActivity extends BaseActivity implements HomeSortingAdapter.cal
 
     @Override
     public void onClickVHItem(String key) {
-        mPresenter.loadSortData(key);
+        mPresenter.loadSortData(key, networkHelper.isNetworkConnected());
     }
 }

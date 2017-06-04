@@ -132,4 +132,25 @@ public class HomePresenterTest {
         verify(homeView).setAlertNoInternet(true);
         verify(homeView).setProgressIndicator(false);
     }
+
+    @Test
+    public void getFilterDataWhenOnline(){
+        HomeResponse homeResponse = new HomeResponse();
+        ResultData resultData = new ResultData();
+        List<ResultData> resultDatas = new ArrayList<>();
+        resultDatas.add(resultData);
+        MetaData metadata = new MetaData();
+        metadata.resultDataList = resultDatas;
+        homeResponse.metadata = metadata;
+        when(homeService.getCarsList()).thenReturn(Flowable.just(homeResponse));
+        homePresenter.loadSortData("oldest", true);
+        verify(homeView).setProgressIndicator(true);
+    }
+
+    @Test
+    public void getFilterDataWhenOffline(){
+        homePresenter.loadSortData("oldest", false);
+        verify(homeView).setProgressIndicator(false);
+        verify(homeView).setAlertNoInternet(true);
+    }
 }

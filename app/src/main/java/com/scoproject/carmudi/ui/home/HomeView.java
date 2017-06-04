@@ -61,7 +61,14 @@ public class HomeView extends CoordinatorLayout implements HomeContract.View{
 
     @Override
     public void setProgressIndicator(boolean active) {
-        mSwipeRefreshLayout.setRefreshing(active);
+        if(active){
+            mProgressBar.setVisibility(VISIBLE);
+            mSwipeRefreshLayout.setRefreshing(active);
+        }else{
+            mProgressBar.setVisibility(GONE);
+            mSwipeRefreshLayout.setRefreshing(false);
+        }
+
     }
 
     @Override
@@ -73,6 +80,16 @@ public class HomeView extends CoordinatorLayout implements HomeContract.View{
     @Override
     public void setAlertNoInternet(boolean active) {
         Snackbar.make(this, "No Internet Connection", Snackbar.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void setOnRefreshListener(SwipeRefreshLayout.OnRefreshListener onRefreshListener) {
+       mSwipeRefreshLayout.setOnRefreshListener(onRefreshListener);
+    }
+
+    @Override
+    public void hideAlertDialog() {
+        mAlertDialog.hide();
     }
 
     public void showFilterDialog(HomeSortingAdapter homeSortingAdapter){
