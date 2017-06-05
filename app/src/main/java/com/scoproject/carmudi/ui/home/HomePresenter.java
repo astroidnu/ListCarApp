@@ -21,6 +21,7 @@ import com.scoproject.carmudi.data.db.CarsData;
 import com.scoproject.carmudi.helper.NetworkHelper;
 import com.scoproject.carmudi.helper.RVHelper;
 import com.scoproject.carmudi.model.CarModel;
+import com.scoproject.carmudi.networking.NetworkError;
 import com.scoproject.carmudi.ui.home.adapter.HomeSortingAdapter;
 import com.scoproject.carmudi.ui.home.service.HomeResponse;
 import com.scoproject.carmudi.ui.home.service.HomeService;
@@ -72,7 +73,6 @@ public class HomePresenter extends ViewPresenter<HomeView>{
     public void onLoad(){
         mNetworkHelper = new NetworkHelper(getView().getContext());
         mCompositeDisposable = new CompositeDisposable();
-//        getView().setOnRefreshListener(() -> loadData(defaultPage,defaultPage,true));
         getView().setOnRefreshListener(() -> loadData(defaultPage,defaultPage));
     }
 
@@ -87,40 +87,36 @@ public class HomePresenter extends ViewPresenter<HomeView>{
         mResultDataList = resultDataList;
         getView().setData(resultDataList);
         getView().setProgressIndicator(false);
-//        getView().setAlertNoInternet(true);
-
-//        if(isNetworkConnected){
-            getView().setProgressIndicator(true);
+        getView().setProgressIndicator(true);
         mHomeService.init(page,maxSize);
-
-            mCompositeDisposable.add(mHomeService.getCarsList().subscribeWith(new ResourceSubscriber<HomeResponse>() {
-                @Override
-                public void onNext(HomeResponse homeResponse) {
-                    handleOnSuccess(homeResponse);
-                }
-
-                @Override
-                public void onError(Throwable e) {
-                    getView().setProgressIndicator(false);
-                    if (e instanceof UnknownHostException) {
-                        getView().setErrorAlter("Error Connection");
-                    } else if (e instanceof HttpException) {
-                        getView().setErrorAlter("Error Http");
-                        HttpException httpException = (HttpException) e;
-//                        Response response = httpException.response();
-//                        Class<ErrorResponse> type = ErrorResponse.class;
-//                        Converter<ResponseBody, ErrorResponse> converter = retrofit.responseBodyConverter(type, new Annotation[0]);
-//                        try {
-//                            ErrorResponse errorResponse = converter.convert(response.errorBody());
-//                            Log.d(TAG, errorResponse.error);
-//                            Log.d(TAG, errorResponse.error_description);
-//                        } catch (IOException e1) {
-//                            e1.printStackTrace();
-//                        }
-//                        Log.d(TAG, response.raw().request().url().toString());
-                    } else {
-//                        getView().setErrorAlter(true, "Other error");
-                    }
+        mCompositeDisposable.add(mHomeService.getCarsList().subscribeWith(new ResourceSubscriber<HomeResponse>() {
+            @Override
+            public void onNext(HomeResponse homeResponse) {
+                handleOnSuccess(homeResponse);
+            }
+            @Override
+            public void onError(Throwable e) {
+                getView().setProgressIndicator(false);
+                getView().setErrorAlter(new NetworkError(e).getAppErrorMessage());
+//                  if (e instanceof UnknownHostException) {
+//
+//                   }else if (e instanceof HttpException) {
+//                        getView().setErrorAlter("Error Http");
+//                        HttpException httpException = (HttpException) e;
+////                        Response response = httpException.response();
+////                        Class<ErrorResponse> type = ErrorResponse.class;
+////                        Converter<ResponseBody, ErrorResponse> converter = retrofit.responseBodyConverter(type, new Annotation[0]);
+////                        try {
+////                            ErrorResponse errorResponse = converter.convert(response.errorBody());
+////                            Log.d(TAG, errorResponse.error);
+////                            Log.d(TAG, errorResponse.error_description);
+////                        } catch (IOException e1) {
+////                            e1.printStackTrace();
+////                        }
+////                        Log.d(TAG, response.raw().request().url().toString());
+//                    } else {
+//                        getView().setErrorAlter(e.getMessage());
+//                    }
                 }
 
                 @Override

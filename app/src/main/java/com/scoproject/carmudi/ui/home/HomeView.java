@@ -96,7 +96,6 @@ public class HomeView extends CoordinatorLayout implements HomeContract.View{
     @Override
     public void setErrorAlter(String msg) {
         Snackbar.make(this, msg, Snackbar.LENGTH_SHORT).show();
-//        Toast.makeText(this.getContext(),msg, Toast.LENGTH_SHORT).show();
     }
 
     public void showFilterDialog(HomeSortingAdapter homeSortingAdapter){

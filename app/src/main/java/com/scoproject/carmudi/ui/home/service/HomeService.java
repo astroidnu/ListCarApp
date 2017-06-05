@@ -44,15 +44,6 @@ public class HomeService {
                 .toFlowable(BackpressureStrategy.BUFFER);
     }
 
-    public Flowable<HomeResponse> getCarsListSort() {
-        return networkService.getCars(BuildConfig.BASEURL+ "page:"+mPageSize+"/maxitems:"+mMaxItemSize+"/" +"sort:" + mSortItem)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnError(this::handleAccountError)
-                .toFlowable(BackpressureStrategy.BUFFER);
-    }
-
-
     private void handleAccountError(Throwable throwable) {
         Log.e(getClass().getName(), throwable.getMessage());
     }

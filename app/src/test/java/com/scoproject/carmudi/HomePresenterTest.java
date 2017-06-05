@@ -11,6 +11,7 @@ import com.scoproject.carmudi.data.db.DaoMaster;
 import com.scoproject.carmudi.data.db.DaoSession;
 import com.scoproject.carmudi.helper.NetworkHelper;
 import com.scoproject.carmudi.model.CarModel;
+import com.scoproject.carmudi.networking.NetworkError;
 import com.scoproject.carmudi.ui.home.HomeActivity;
 import com.scoproject.carmudi.ui.home.HomeContract;
 import com.scoproject.carmudi.ui.home.HomePresenter;
@@ -29,6 +30,7 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -75,11 +77,9 @@ public class HomePresenterTest {
         DaoMaster.DevOpenHelper openHelper = new DaoMaster.DevOpenHelper(RuntimeEnvironment.application, null, null);
         SQLiteDatabase db = openHelper.getWritableDatabase();
         daoSession = new DaoMaster(db).newSession();
-//        carsDataDao = daoSession.getCarsDataDao();
 
         //Init Mockito
         MockitoAnnotations.initMocks(this);
-//        when(daoSession.getCarsDataDao()).thenReturn(carsDataDao);
         carModel = new CarModel(daoSession);
         homePresenter = new HomePresenter(homeService,carModel);
         homePresenter.takeView(homeView);
@@ -89,22 +89,6 @@ public class HomePresenterTest {
     public void testPreConditions() {
         assertNotNull(carModel);
     }
-
-//    @Test
-//    public void testBasicsDB() {
-//        CarsData entity = new CarsData();
-//        entity.setName("Brio RS 2017");
-//        entity.setId("123");
-//        entity.setAgencyName("Ibnu");
-//        daoSession.insert(entity);
-//        assertNotNull(entity.getId());
-//        assertNotNull(carsDataDao.load(entity.getId()));
-//        assertEquals(1, carsDataDao.count());
-//        assertEquals(1, daoSession.loadAll(CarsData.class).size());
-//        daoSession.update(entity);
-//        daoSession.delete(entity);
-//        assertNull(carsDataDao.load(entity.getId()));
-//    }
 
     @Test
     public void getDataWhenOnline(){
@@ -124,21 +108,17 @@ public class HomePresenterTest {
         homeResponse.metadata = metadata;
         //Test Save Response into Database
         when(homeService.getCarsList()).thenReturn(Flowable.just(homeResponse));
-        homePresenter.loadData(1,1,true);
-
-
-
-
+        homePresenter.loadData(1,1);
         assertEquals(metadata.resultDataList.size(), 1);
-//          assertEquals(carModel.loadAll().size(), 1);
+        assertEquals(carModel.loadAll().size(), 1);
         verify(homeView).setProgressIndicator(true);
     }
 
     @Test
     public void getDataWhenOffline(){
-        homePresenter.loadData(1,1,false);
-        verify(homeView).setAlertNoInternet(true);
-        verify(homeView).setProgressIndicator(false);
+        when(homeService.getCarsList()).thenReturn(Flowable.error(new UnknownHostException()));
+        homePresenter.loadData(1,1);
+        verify(homeView).setErrorAlter(NetworkError.NETWORK_ERROR_MESSAGE);
     }
 
     @Test
@@ -158,16 +138,16 @@ public class HomePresenterTest {
         homeResponse.metadata = metadata;
         when(homeService.getCarsList()).thenReturn(Flowable.just(homeResponse));
         int mResultDataList = 5;
-        homePresenter.loadData(1, mResultDataList + 5, true);
+        homePresenter.loadData(1, mResultDataList + 5);
         verify(homeView).setProgressIndicator(true);
     }
 
     @Test
     public void getLoadMoreDataWhenOffline(){
+        when(homeService.getCarsList()).thenReturn(Flowable.error(new UnknownHostException()));
         int mResultDataList = 5;
-        homePresenter.loadData(1, mResultDataList + 5, false);
-        verify(homeView).setAlertNoInternet(true);
-        verify(homeView).setProgressIndicator(false);
+        homePresenter.loadData(1, mResultDataList + 5);
+        verify(homeView).setErrorAlter(NetworkError.NETWORK_ERROR_MESSAGE);
     }
 
     @Test
@@ -193,8 +173,8 @@ public class HomePresenterTest {
 
     @Test
     public void handleResponseErrorAPI(){
-        when(homeService.getCarsList()).thenReturn(Flowable.error(new Throwable("test")));
-        homePresenter.loadData(1,1,true);
-        verify(homeView).setErrorAlter(true, "test");
+        when(homeService.getCarsList()).thenReturn(Flowable.error(new Throwable()));
+        homePresenter.loadData(1,1);
+        verify(homeView).setErrorAlter(NetworkError.DEFAULT_ERROR_MESSAGE);
     }
 }
