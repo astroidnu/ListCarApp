@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.scoproject.carmudi.R;
@@ -28,6 +29,9 @@ import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
 
 import java.io.File;
+import java.io.IOException;
+import java.lang.annotation.Annotation;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,6 +39,9 @@ import javax.inject.Inject;
 
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.subscribers.ResourceSubscriber;
+import okhttp3.ResponseBody;
+import retrofit2.HttpException;
+import retrofit2.Response;
 
 /**
  * Created by ibnumuzzakkir on 6/1/17.
@@ -55,35 +62,65 @@ public class HomePresenter extends ViewPresenter<HomeView>{
     private NetworkHelper mNetworkHelper;
     private CarModel mCarModel;
 
-    public HomePresenter(HomeActivity activity, HomeService service,
-                         NetworkHelper networkHelper, CarModel carModel){
-        mActivity = activity;
+    public HomePresenter(HomeService service, CarModel carModel){
         mHomeService = service;
-        mNetworkHelper = networkHelper;
+
         mCarModel = carModel;
     }
 
     @Override
     public void onLoad(){
+        mNetworkHelper = new NetworkHelper(getView().getContext());
         mCompositeDisposable = new CompositeDisposable();
-        getView().setOnRefreshListener(() -> loadData(defaultPage,defaultPage,true));
+//        getView().setOnRefreshListener(() -> loadData(defaultPage,defaultPage,true));
+        getView().setOnRefreshListener(() -> loadData(defaultPage,defaultPage));
     }
 
     /*Load Data From API*/
-    public void loadData(int page, int maxSize,
-                         boolean isNetworkConnected){
-        if(isNetworkConnected){
+    public void loadData(int page, int maxSize){
+        List<ResultData> resultDataList = new ArrayList<>();
+        for(CarsData carsData : mCarModel.loadAll()){
+            ResultData resultData = new ResultData();
+            resultData.setCarsDataList(carsData);
+            resultDataList.add(resultData);
+        }
+        mResultDataList = resultDataList;
+        getView().setData(resultDataList);
+        getView().setProgressIndicator(false);
+//        getView().setAlertNoInternet(true);
+
+//        if(isNetworkConnected){
             getView().setProgressIndicator(true);
-            mHomeService.init(page,maxSize);
+        mHomeService.init(page,maxSize);
+
             mCompositeDisposable.add(mHomeService.getCarsList().subscribeWith(new ResourceSubscriber<HomeResponse>() {
                 @Override
                 public void onNext(HomeResponse homeResponse) {
-                        handleOnSuccess(homeResponse);
+                    handleOnSuccess(homeResponse);
                 }
 
                 @Override
-                public void onError(Throwable t) {
-
+                public void onError(Throwable e) {
+                    getView().setProgressIndicator(false);
+                    if (e instanceof UnknownHostException) {
+                        getView().setErrorAlter("Error Connection");
+                    } else if (e instanceof HttpException) {
+                        getView().setErrorAlter("Error Http");
+                        HttpException httpException = (HttpException) e;
+//                        Response response = httpException.response();
+//                        Class<ErrorResponse> type = ErrorResponse.class;
+//                        Converter<ResponseBody, ErrorResponse> converter = retrofit.responseBodyConverter(type, new Annotation[0]);
+//                        try {
+//                            ErrorResponse errorResponse = converter.convert(response.errorBody());
+//                            Log.d(TAG, errorResponse.error);
+//                            Log.d(TAG, errorResponse.error_description);
+//                        } catch (IOException e1) {
+//                            e1.printStackTrace();
+//                        }
+//                        Log.d(TAG, response.raw().request().url().toString());
+                    } else {
+//                        getView().setErrorAlter(true, "Other error");
+                    }
                 }
 
                 @Override
@@ -91,17 +128,18 @@ public class HomePresenter extends ViewPresenter<HomeView>{
 
                 }
             }));
-        }else{
-            List<ResultData> resultDataList = new ArrayList<>();
-            ResultData resultData = new ResultData();
-            for(CarsData carsData : mCarModel.loadAll()){
-                resultData.setCarsDataList(carsData);
-            }
-            resultDataList.add(resultData);
-            getView().setData(resultDataList);
-            getView().setProgressIndicator(false);
-            getView().setAlertNoInternet(true);
-        }
+//        }else{
+//            List<ResultData> resultDataList = new ArrayList<>();
+//            for(CarsData carsData : mCarModel.loadAll()){
+//                ResultData resultData = new ResultData();
+//                resultData.setCarsDataList(carsData);
+//                resultDataList.add(resultData);
+//            }
+//            mResultDataList = resultDataList;
+//            getView().setData(resultDataList);
+//            getView().setProgressIndicator(false);
+//            getView().setAlertNoInternet(true);
+//        }
     }
 
     public void handleOnSuccess(HomeResponse data){
@@ -129,9 +167,11 @@ public class HomePresenter extends ViewPresenter<HomeView>{
                 if (RVHelper.lastVisibleItemPosition(recyclerView) >= mResultDataList.size() - 1) {
                     int pageIndex = 1;
                     if(mResultDataList.size() % 100 == 0){
-                        loadData(pageIndex++, mResultDataList.size() + 5, mNetworkHelper.isNetworkConnected());
+//                        loadData(pageIndex++, mResultDataList.size() + 5, mNetworkHelper.isNetworkConnected());
+                        loadData(pageIndex++, mResultDataList.size() + 5);
                     }else{
-                        loadData(1, mResultDataList.size() + 5, mNetworkHelper.isNetworkConnected());
+//                        loadData(1, mResultDataList.size() + 5, mNetworkHelper.isNetworkConnected());
+                        loadData(1, mResultDataList.size() + 5);
                     }
                 }
             }
@@ -154,7 +194,7 @@ public class HomePresenter extends ViewPresenter<HomeView>{
 
 
     public void onError(Throwable throwable) {
-        getView().mSwipeRefreshLayout.setRefreshing(false);
-        Log.d(getClass().getName(), throwable.getMessage());
+        getView().setErrorAlter(throwable.getMessage());
+        getView().setProgressIndicator(false);
     }
 }

@@ -17,15 +17,18 @@ import javax.inject.Inject;
  */
 
 public class HomeActivity extends BaseActivity implements HomeSortingAdapter.callback, HomeContract.UserActionsListener{
-    @Inject
-    HomeService mHomeService;
+//    @Inject
+//    HomeService mHomeService;
 
-    @Inject
-    CarModel mCarModel;
+//    @Inject
+//    CarModel mCarModel;
 
-    private HomeComponent mComponent;
+//    private HomeComponent mComponent;
     private HomeView mView;
-    private HomePresenter mPresenter;
+
+    @Inject
+    HomePresenter mPresenter;
+
     private HomeSortingAdapter mHomeSortingAdapter;
     private NetworkHelper networkHelper;
 
@@ -35,7 +38,7 @@ public class HomeActivity extends BaseActivity implements HomeSortingAdapter.cal
         mHomeSortingAdapter = new HomeSortingAdapter(this, this);
         setContentView(mView);
         networkHelper = new NetworkHelper(this);
-        mPresenter = new HomePresenter(this,mHomeService, networkHelper, mCarModel);
+//        mPresenter = new HomePresenter(mHomeService, networkHelper, mCarModel);
         mPresenter.takeView(mView);
         mView.mToolbarSort.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -48,14 +51,16 @@ public class HomeActivity extends BaseActivity implements HomeSortingAdapter.cal
 
     @Override
     protected void onCreateComponent(AppComponent appComponent) {
-        mComponent = DaggerHomeComponent.builder().appComponent(appComponent).build();
-        mComponent.inject(this);
+//        mComponent = DaggerHomeComponent.builder().appComponent(appComponent).build();
+        appComponent.plus(new HomeModule(this)).inject(this);
+//        mComponent.inject(this);
     }
 
     @Override
     public void onResume(){
         super.onResume();
-        mPresenter.loadData(1,5,networkHelper.isNetworkConnected());
+//        mPresenter.loadData(1,5,networkHelper.isNetworkConnected());
+        mPresenter.loadData(1,5);
     }
 
     @Override

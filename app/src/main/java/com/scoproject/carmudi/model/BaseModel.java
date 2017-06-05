@@ -10,10 +10,8 @@ import com.scoproject.carmudi.di.component.AppComponent;
 
 public class BaseModel {
     protected final DaoSession mDaoSession;
-    protected final AppComponent mComponent;
 
-    public BaseModel(CarmudiApp app, DaoSession daoSession) {
-        mComponent = app.component();
+    public BaseModel(DaoSession daoSession) {
         mDaoSession = daoSession;
     }
 }

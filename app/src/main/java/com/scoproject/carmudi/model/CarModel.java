@@ -9,6 +9,8 @@ import com.scoproject.carmudi.data.db.DaoSession;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 /**
  * Created by ibnumuzzakkir on 6/2/17.
  */
@@ -16,9 +18,10 @@ import java.util.List;
 public class CarModel extends BaseModel{
     private CarsDataDao mEntityDao;
 
-    public CarModel(CarmudiApp app, DaoSession daoSession) {
-        super(app, daoSession);
-        app.component().inject(this);
+    @Inject
+    public CarModel(DaoSession daoSession) {
+        super(daoSession);
+//        app.component().inject(this);
         mEntityDao = daoSession.getCarsDataDao();
 
     }
@@ -26,6 +29,12 @@ public class CarModel extends BaseModel{
     @Nullable
     public List<CarsData> loadAll() {
         return mEntityDao.loadAll();
+    }
+
+
+    @Nullable
+    public CarsData load(String id) {
+        return mEntityDao.load(id);
     }
 
     public synchronized void save(CarsData carsData) {

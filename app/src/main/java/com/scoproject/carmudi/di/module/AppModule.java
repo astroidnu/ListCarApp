@@ -38,10 +38,10 @@ public class AppModule {
         return daoMaster.newSession();
     }
 
-    //Provide Model
+//    Provide Model
     @Provides
     @AppScope
     CarModel provideCarModel(DaoSession daoSession) {
-        return new CarModel(mApp, daoSession);
+        return new CarModel(daoSession);
     }
 }

@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.scoproject.carmudi.R;
 import com.scoproject.carmudi.data.ResultData;
@@ -62,10 +63,10 @@ public class HomeView extends CoordinatorLayout implements HomeContract.View{
     @Override
     public void setProgressIndicator(boolean active) {
         if(active){
-            mProgressBar.setVisibility(VISIBLE);
+//            mProgressBar.setVisibility(VISIBLE);
             mSwipeRefreshLayout.setRefreshing(active);
         }else{
-            mProgressBar.setVisibility(GONE);
+//            mProgressBar.setVisibility(GONE);
             mSwipeRefreshLayout.setRefreshing(false);
         }
 
@@ -90,6 +91,12 @@ public class HomeView extends CoordinatorLayout implements HomeContract.View{
     @Override
     public void hideAlertDialog() {
         mAlertDialog.hide();
+    }
+
+    @Override
+    public void setErrorAlter(String msg) {
+        Snackbar.make(this, msg, Snackbar.LENGTH_SHORT).show();
+//        Toast.makeText(this.getContext(),msg, Toast.LENGTH_SHORT).show();
     }
 
     public void showFilterDialog(HomeSortingAdapter homeSortingAdapter){

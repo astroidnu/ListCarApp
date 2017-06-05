@@ -19,6 +19,7 @@ public interface HomeContract {
         void setAlertNoInternet(boolean active);
         void setOnRefreshListener(SwipeRefreshLayout.OnRefreshListener onRefreshListener);
         void hideAlertDialog();
+        void setErrorAlter(String msg);
     }
 
     interface UserActionsListener{
