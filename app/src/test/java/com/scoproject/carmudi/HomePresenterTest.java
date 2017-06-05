@@ -48,7 +48,8 @@ import static org.mockito.Mockito.when;
  * Android Developer
  * Garena Indonesia
  */
-
+@RunWith(RobolectricTestRunner.class)
+@Config(constants = BuildConfig.class, sdk = 16)
 public class HomePresenterTest {
     @Mock
     HomeActivity homeActivity;
@@ -63,9 +64,18 @@ public class HomePresenterTest {
     @Mock
     NetworkHelper networkHelper;
 
+    private DaoSession daoSession;
+    private CarsDataDao carsDataDao;
+
     HomePresenter homePresenter;
     @Before
     public void setUp() throws Exception{
+        //Init DB
+        DaoMaster.DevOpenHelper openHelper = new DaoMaster.DevOpenHelper(RuntimeEnvironment.application, null, null);
+        SQLiteDatabase db = openHelper.getWritableDatabase();
+        daoSession = new DaoMaster(db).newSession();
+        carsDataDao = daoSession.getCarsDataDao();
+        //Init Mockito
         MockitoAnnotations.initMocks(this);
         homePresenter = new HomePresenter(homeActivity, homeService, networkHelper,carModel);
         homePresenter.takeView(homeView);
@@ -74,6 +84,22 @@ public class HomePresenterTest {
     @Test
     public void testPreConditions() {
         assertNotNull(carModel);
+    }
+
+    @Test
+    public void testBasicsDB() {
+        CarsData entity = new CarsData();
+        entity.setName("Brio RS 2017");
+        entity.setId("123");
+        entity.setAgencyName("Ibnu");
+        daoSession.insert(entity);
+        assertNotNull(entity.getId());
+        assertNotNull(carsDataDao.load(entity.getId()));
+        assertEquals(1, carsDataDao.count());
+        assertEquals(1, daoSession.loadAll(CarsData.class).size());
+        daoSession.update(entity);
+        daoSession.delete(entity);
+        assertNull(carsDataDao.load(entity.getId()));
     }
 
     @Test

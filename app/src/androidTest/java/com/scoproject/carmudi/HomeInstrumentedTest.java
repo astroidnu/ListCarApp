@@ -18,6 +18,7 @@ import org.junit.runner.RunWith;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.contrib.RecyclerViewActions.scrollToPosition;
 import static android.support.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static android.support.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -31,7 +32,6 @@ import static com.scoproject.carmudi.utils.RecyclerViewMatcher.withRecyclerView;
 @RunWith(AndroidJUnit4.class)
 @LargeTest
 public class HomeInstrumentedTest {
-
     private TestComponent testComponent;
 
     @Rule
@@ -67,6 +67,15 @@ public class HomeInstrumentedTest {
                 .check(matches(hasDescendant(withText("oldest"))));
         onView(withId(R.id.sorting_recyclerview))
                 .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
+        onView(withId(R.id.home_recyclerview))
+                .check(matches(isCompletelyDisplayed()));
+    }
+
+    @Test
+    public void onLoadMoreTest() throws InterruptedException{
+        myActivityRule.launchActivity(null);
+        onView(withId(R.id.home_recyclerview)).perform(scrollToPosition(5));
+        onView(withId(R.id.home_swiperefresh)).check(matches(isDisplayed()));
         onView(withId(R.id.home_recyclerview))
                 .check(matches(isCompletelyDisplayed()));
     }
