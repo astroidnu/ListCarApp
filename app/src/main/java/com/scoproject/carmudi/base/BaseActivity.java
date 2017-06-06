@@ -17,7 +17,6 @@ import java.lang.ref.WeakReference;
 
 import javax.inject.Inject;
 
-import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 
 /**
