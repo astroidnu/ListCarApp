@@ -129,7 +129,4 @@ dependencies {
     //RetroLambda Config
     retrolambdaConfig 'net.orfjackal.retrolambda:retrolambda:2.5.1'
 
-    //Caligraphy
-    compile 'uk.co.chrisjenx:calligraphy:2.2.0'
-
 }

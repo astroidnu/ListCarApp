@@ -89,7 +89,8 @@ public class HomePresenter extends ViewPresenter<HomeView>{
         getView().setProgressIndicator(false);
         getView().setProgressIndicator(true);
         mHomeService.init(page,maxSize);
-        mCompositeDisposable.add(mHomeService.getCarsList().subscribeWith(new ResourceSubscriber<HomeResponse>() {
+        mCompositeDisposable.add(mHomeService.getCarsList()
+                .subscribeWith(new ResourceSubscriber<HomeResponse>() {
             @Override
             public void onNext(HomeResponse homeResponse) {
                 handleOnSuccess(homeResponse);

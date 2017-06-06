@@ -36,6 +36,4 @@ public interface AppComponent extends IAppComponent {
     }
     Application getApplication();
     HomeComponent plus(HomeModule homeModule);
-
-
 }
