@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import com.scoproject.carmudi.R;
 import com.scoproject.carmudi.data.ResultData;
+import com.scoproject.carmudi.data.db.CarsData;
 import com.scoproject.carmudi.ui.home.adapter.HomeActivityAdapter;
 import com.scoproject.carmudi.ui.home.adapter.HomeSortingAdapter;
 
@@ -73,8 +74,8 @@ public class HomeView extends CoordinatorLayout implements HomeContract.View{
     }
 
     @Override
-    public void setData(List<ResultData> resultDataList){
-        mHomeActivityAdapter.setData(resultDataList);
+    public void setData(List<CarsData> carsDatas){
+        mHomeActivityAdapter.setData(carsDatas);
         mSwipeRefreshLayout.setRefreshing(false);
     }
 

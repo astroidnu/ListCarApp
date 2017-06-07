@@ -3,6 +3,7 @@ package com.scoproject.carmudi.ui.home;
 import android.os.Bundle;
 import android.view.View;
 
+import com.google.gson.Gson;
 import com.scoproject.carmudi.base.BaseActivity;
 import com.scoproject.carmudi.di.component.AppComponent;
 import com.scoproject.carmudi.helper.NetworkHelper;
@@ -18,6 +19,8 @@ import javax.inject.Inject;
 
 public class HomeActivity extends BaseActivity implements HomeSortingAdapter.callback, HomeContract.UserActionsListener{
     private HomeView mView;
+    @Inject
+    Gson gson;
 
     @Inject
     HomePresenter mPresenter;

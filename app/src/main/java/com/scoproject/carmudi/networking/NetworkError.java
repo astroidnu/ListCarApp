@@ -1,5 +1,6 @@
 package com.scoproject.carmudi.networking;
 
+import java.io.IOException;
 import java.net.UnknownHostException;
 
 /**
@@ -24,7 +25,7 @@ public class NetworkError extends Throwable {
     }
 
     public String getAppErrorMessage(){
-        if(this.error instanceof UnknownHostException) return NETWORK_ERROR_MESSAGE;
+        if(this.error instanceof IOException) return NETWORK_ERROR_MESSAGE;
         return DEFAULT_ERROR_MESSAGE;
     }
 }

@@ -49,10 +49,6 @@ import retrofit2.Response;
  */
 
 public class HomePresenter extends ViewPresenter<HomeView>{
-
-    @Inject
-    Gson gson;
-
     private HomeActivity mActivity;
     private CompositeDisposable mCompositeDisposable;
     private List<ResultData> mResultDataList;
@@ -62,10 +58,11 @@ public class HomePresenter extends ViewPresenter<HomeView>{
     private HomeService mHomeService;
     private NetworkHelper mNetworkHelper;
     private CarModel mCarModel;
+    private Gson mGson;
 
-    public HomePresenter(HomeService service, CarModel carModel){
+    public HomePresenter(HomeService service, CarModel carModel, Gson gson){
         mHomeService = service;
-
+        mGson = gson;
         mCarModel = carModel;
     }
 
@@ -85,19 +82,21 @@ public class HomePresenter extends ViewPresenter<HomeView>{
             resultDataList.add(resultData);
         }
         mResultDataList = resultDataList;
-        getView().setData(resultDataList);
-        getView().setProgressIndicator(false);
+//        getView().setData(resultDataList);
         getView().setProgressIndicator(true);
         mHomeService.init(page,maxSize);
         mCompositeDisposable.add(mHomeService.getCarsList()
-                .subscribeWith(new ResourceSubscriber<HomeResponse>() {
+                .subscribeWith(new ResourceSubscriber<List<CarsData>>() {
             @Override
-            public void onNext(HomeResponse homeResponse) {
-                handleOnSuccess(homeResponse);
+            public void onNext(List<CarsData> carsDatas) {
+                handleOnSuccess(carsDatas);
             }
             @Override
             public void onError(Throwable e) {
                 getView().setProgressIndicator(false);
+                if(e instanceof IOException){
+                   getView().setData(mCarModel.loadAll());
+                }
                 getView().setErrorAlter(new NetworkError(e).getAppErrorMessage());
 //                  if (e instanceof UnknownHostException) {
 //
@@ -139,16 +138,16 @@ public class HomePresenter extends ViewPresenter<HomeView>{
 //        }
     }
 
-    public void handleOnSuccess(HomeResponse data){
+    public void handleOnSuccess(List<CarsData> data){
+        Log.d(getClass().getName(), mGson.toJson(data));
         mCarModel.clear();
-        List<ResultData> resultDataList = data.metadata.resultDataList;
-        for(ResultData resultData : resultDataList){
-            CarsData carsData = resultData.carsDataList;
+//        List<ResultData> resultDataList = data.metadata.resultDataList;
+        for(CarsData carsData : data){
             mCarModel.save(carsData);
         }
-        mResultDataList = data.metadata.resultDataList;
+//        mResultDataList = data.metadata.resultDataList;
         getView().setProgressIndicator(false);
-        getView().setData(mResultDataList);
+        getView().setData(data);
     }
 
     public void loadMore(){

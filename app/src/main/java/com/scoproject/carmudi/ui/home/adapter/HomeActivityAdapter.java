@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.scoproject.carmudi.R;
 import com.scoproject.carmudi.data.ResultData;
+import com.scoproject.carmudi.data.db.CarsData;
 import com.scoproject.carmudi.helper.AppHelper;
 
 import java.util.ArrayList;
@@ -23,7 +24,7 @@ import java.util.List;
 
 public class HomeActivityAdapter extends RecyclerView.Adapter<HomeActivityAdapter.ViewHolder> {
     private Context mContext;
-    private List<ResultData>  mResultData = new ArrayList<>();
+    private List<CarsData>  mCarsDatas = new ArrayList<>();
     private LayoutInflater mLayoutInflater;
 
     public HomeActivityAdapter(Context context){
@@ -31,8 +32,8 @@ public class HomeActivityAdapter extends RecyclerView.Adapter<HomeActivityAdapte
         mLayoutInflater = LayoutInflater.from(context);
     }
 
-    public void setData(List<ResultData> resultDatas){
-        mResultData = resultDatas;
+    public void setData(List<CarsData> carsDatas){
+        mCarsDatas = carsDatas;
         notifyDataSetChanged();
 
     }
@@ -44,14 +45,14 @@ public class HomeActivityAdapter extends RecyclerView.Adapter<HomeActivityAdapte
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        ResultData data = mResultData.get(position);
-        String[] finalPrice = data.carsDataList.price.split("\\.");
-        holder.mCarName.setText(data.carsDataList.originalName);
-        holder.mCarBrand.setText(data.carsDataList.brand);
+        CarsData data = mCarsDatas.get(position);
+        String[] finalPrice = data.price.split("\\.");
+        holder.mCarName.setText(data.originalName);
+        holder.mCarBrand.setText(data.brand);
         holder.mCarPrice.setText(AppHelper.CurrencyHelper(Long.valueOf(finalPrice[0])));
         try{
             Glide.with(mContext)
-                    .load(data.imageDataList.get(0).url)
+                    .load(R.drawable.placeholder)
                     .placeholder(R.drawable.placeholder)
                     .into(holder.mCarThumb);
         }catch (Exception e){
@@ -65,7 +66,7 @@ public class HomeActivityAdapter extends RecyclerView.Adapter<HomeActivityAdapte
 
     @Override
     public int getItemCount() {
-        return mResultData.size();
+        return mCarsDatas.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

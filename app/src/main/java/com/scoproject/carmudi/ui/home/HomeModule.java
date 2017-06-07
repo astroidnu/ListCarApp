@@ -1,5 +1,6 @@
 package com.scoproject.carmudi.ui.home;
 
+import com.google.gson.Gson;
 import com.scoproject.carmudi.di.scope.AppScope;
 import com.scoproject.carmudi.helper.NetworkHelper;
 import com.scoproject.carmudi.model.CarModel;
@@ -30,7 +31,7 @@ public class HomeModule {
     @Provides
     @HomeScope
     HomePresenter homePresenter(HomeService service,
-                                 CarModel carModel) {
-        return new HomePresenter(service,carModel);
+                                 CarModel carModel, Gson gson) {
+        return new HomePresenter(service,carModel, gson);
     }
 }
